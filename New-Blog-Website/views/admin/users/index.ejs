@@ -5,10 +5,12 @@
                 <h1 class="admin-heading"><i class="fa fa-users"></i> All Users</h1>
             </div>
             <div class="col-md-2">
-                <a class="add-new" href="add-user.html">add user</a>
+                <a class="add-new" href="/admin/add-user">add user</a>
             </div>
             <div class="col-md-12">
-                <table class="content-table">
+                <!-- <%= users %> -->
+                <div id="usersTable"></div>
+                <!-- <table class="content-table">
                     <thead>
                         <th>S.No.</th>
                         <th>Full Name</th>
@@ -51,8 +53,8 @@
                             <td class='delete'><a href='delete-user.html'><i class='fa fa-trash-o'></i></a></td>
                         </tr>
                     </tbody>
-                </table>
-                <nav>
+                </table> -->
+                <!-- <nav>
                     <ul class="pagination">
                         <li class="page-item disabled">
                             <a class="page-link">Previous</a>
@@ -66,8 +68,64 @@
                             <a class="page-link" href="#">Next</a>
                         </li>
                     </ul>
-                </nav>
+                </nav> -->
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js"></script>
+
+<script>
+    const tableData = <%- JSON.stringify(users) %>;
+    // console.log(tableData)
+    var table = new Tabulator("#usersTable", {
+        data: tableData,
+        layout: "fitColumns",
+        pagination: true,
+        paginationSize: 10,
+        paginationSizeSelector: [5, 10, 25, 50, 100],
+        columns: [
+            // { title: "ID", field: "id", width: 50 },
+            { title: "Full Name", field: "fullname", headerFilter: "input" },
+            { title: "User Name", field: "username", headerFilter: "input" },
+            { title: "Role", field: "role", headerFilter: "input" },
+            {
+                title: "Action", formatter: function (cell, formatterParams, onRendered) {
+
+                    const id = cell.getRow().getData()._id
+                    return `<a href='/admin/update-user/${id}' class="btn btn-primary btn-sm"><i class='fa fa-edit text-white'></i></a>
+                <button onclick="deleteUser('${id}')" class="btn btn-danger btn-sm"><i class='fa fa-trash-o text-white'></i></button>`;
+                }
+            },
+        ],
+    });
+
+
+   async function deleteUser(id) {
+        try {
+            if (confirm("Are you sure you want to delete this user?")) {
+                const response = await fetch(`/admin/delete-user/${id}`, {
+                    method: 'DELETE',
+                });
+                if (response.ok) {
+                    alert("User deleted successfully");
+                    location.reload();
+                } else {
+                    alert("Failed to delete user");
+                }
+            }
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            alert("An error occurred while deleting the user");
+        }
+    }
+
+</script>
+
+
+<%- contentFor("tabulatorCss") %>
+    <link href="https://unpkg.com/tabulator-tables@6.3.1/dist/css/tabulator.min.css" rel="stylesheet">
+    <link href="/css/tabulator_bootstrap.min.css" rel="stylesheet">

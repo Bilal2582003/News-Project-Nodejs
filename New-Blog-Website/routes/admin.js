@@ -18,26 +18,26 @@ router.get('/add-user', userController.addUserPage);
 router.post('/add-user', userController.addUser);
 router.get('/update-user/:id', userController.updateUserPage);
 router.post('/update-user/:id', userController.updateUser);
-router.get('/delete-user/:id', userController.deleteUser);
+router.delete('/delete-user/:id', userController.deleteUser);
 // Categroy Management
 router.get('/category', categoryController.allCategory);
 router.get('/add-category', categoryController.addCategoryPage);
 router.post('/add-category', categoryController.addCategory);
 router.get('/update-category/:id', categoryController.updateCategoryPage);
 router.post('/update-category/:id', categoryController.updateCategory);
-router.get('/delete-category/:id', categoryController.deleteCategory);
+router.delete('/delete-category/:id', categoryController.deleteCategory);
 // Article Management
 router.get('/articles', articleController.allArticles);
 router.get('/add-article', articleController.addArticlePage);
 router.post('/add-article', articleController.addArticle);
 router.get('/update-article/:id', articleController.updateArticlePage);
 router.post('/update-article/:id', articleController.updateArticle);
-router.get('/delete-article/:id', articleController.deleteArticle);
+router.delete('/delete-article/:id', articleController.deleteArticle);
 // Comment Management
 router.get('/comments', commentsController.allComments);
 router.get('/add-comment', commentsController.addCommentPage);
 router.post('/add-comment', commentsController.addComment);
 router.get('/update-comment/:id', commentsController.updateCommentPage);
 router.post('/update-comment/:id', commentsController.updateComment);
-router.get('/delete-comment/:id', commentsController.deleteComment);
+router.delete('/delete-comment/:id', commentsController.deleteComment);
 module.exports = router;
