@@ -1,14 +1,14 @@
 const categoryModel = require('../models/Category.js');
 
 const allCategory = (req, res) => {
-    res.render("admin/categories");
+    res.render("admin/categories", {role: req.role});
 };
 const addCategoryPage = (req, res) => {
-    res.render("admin/categories/create");
+    res.render("admin/categories/create", {role: req.role});
 };
 const addCategory = (req, res) => {};
 const updateCategoryPage = (req, res) => {
-    res.render("admin/categories/update");
+    res.render("admin/categories/update", {role: req.role});
 };
 const updateCategory = (req, res) => {};
 const deleteCategory = (req, res) => {};

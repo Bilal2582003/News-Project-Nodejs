@@ -1,19 +1,51 @@
 const userModel = require("../models/User");
+const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
+const dotenv = require("dotenv")
 
 const login = (req, res) => {
   res.render("admin/login", { layout: false });
 };
 const dashboard = (req, res) => {
-  res.render("admin/dashboard");
+  res.render("admin/dashboard", { fullname: req.fullname ,role: req.role});
 };
 const settings = (req, res) => {
-  res.render("admin/settings");
+  res.render("admin/settings", {role: req.role});
 };
-const index = (req, res) => {};
-const logout = (req, res) => {};
+const adminLogin = async (req, res) => {
+  const {username, password}= req.body
+  try {
+    const user = await userModel.findOne({ username });
+    if (!user) {
+      return res.status(401).send("Invalid username or password");
+    }
+    
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).send("Invalid username or password");
+    }
+    
+    const jwtData = { id: user._id, role: user.role, fullname: user.fullname }
+    const token = jwt.sign(
+      jwtData,
+      process.env.JWT_SECRET || "your_secret_key",
+      { expiresIn: "1h" }
+    );
+    
+    res.cookie("token", token, { httpOnly: true, maxAge: 60 * 60 * 1000 });
+    res.redirect("/admin/dashboard");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+};
+const logout = (req, res) => {
+  res.clearCookie("token");
+  res.redirect("/admin/");
+};
 const allUser = async (req, res) => {
   const users = await userModel.find();
-  res.render("admin/users", { users });
+  res.render("admin/users", { users, role: req.role });
 };
 const addUserPage = (req, res) => {
   res.render("admin/users/create");
@@ -30,7 +62,7 @@ const updateUserPage = async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
-    res.render("admin/users/update", { user });
+    res.render("admin/users/update", { user, role: req.role });
   } catch (err) {
     console.error(err);
     res.status(500).send("Server Error");
@@ -73,7 +105,7 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
   login,
-  index,
+  adminLogin,
   logout,
   allUser,
   addUserPage,

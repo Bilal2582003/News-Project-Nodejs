@@ -1,7 +1,7 @@
 const commentModel = require('../models/Comments.js');
 
 const allComments = (req, res)=>{
-    res.render("admin/comments");
+    res.render("admin/comments", {role: req.role});
 };
 const addCommentPage = (req, res)=>{};
 const addComment = (req, res)=>{};
