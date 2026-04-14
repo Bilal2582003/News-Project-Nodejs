@@ -1,28 +1,27 @@
 <!-- post-container -->
 <div class="post-container">
     <div class="post-content single-post">
-        <h3>Lorem ipsum dolor sit amet, consectetur</h3>
+        <h3><%= news.data[0].title %></h3>
         <div class="post-information">
             <span>
                 <i class="fa fa-tags" aria-hidden="true"></i>
-                Html
+                <a href="/category/<%= news.data[0].category.slug %>"><%= news.data[0].category.name %></a>
             </span>
             <span>
                 <i class="fa fa-user" aria-hidden="true"></i>
-                <a href='author.html'>Admin</a>
+                <a href='/author/<%= news.data[0].author._id %>'><%= news.data[0].author.fullname %></a>
             </span>
             <span>
                 <i class="fa fa-calendar" aria-hidden="true"></i>
-                01 Nov, 2025
+                <% var date=new Date(news.data[0].createdAt); var newDate=date.toLocaleDateString('en-GB', {
+                                    day: '2-digit' , month: 'long' , year: 'numeric' });%>
+
+                                    <%= newDate %>
             </span>
         </div>
-        <img class="single-feature-image" src="images/post_1.jpg" alt="" />
+        <img class="single-feature-image" src="/uploads/<%= news.data[0].image %>" alt="" />
         <p class="description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum
+            <%- news.data[0].content %>
         </p>
     </div>
 </div>
@@ -35,7 +34,7 @@
     <!-- Comment Form -->
     <div class="card mb-4">
         <div class="card-body">
-            <form action="/article/1/comment" method="POST">
+            <form action="/single/<%= news.data[0]._id %>/comment" method="POST">
                 <div class="mb-3">
                     <label class="form-label">Name</label>
                     <input type="text" class="form-control" name="name" required>
@@ -57,10 +56,11 @@
     <div class="comments-list">
         <div class="card mb-3">
             <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">User Name</h6>
-                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam est laboriosam rerum
-                    saepe odit exercitationem earum sequi in ipsum culpa!</p>
-                <small class="text-muted">Posted on 10-10-2020</small>
+                <% news.comments.forEach(function(comment) { %>
+                <h6 class="card-subtitle mb-2 text-muted"><%= comment.name %></h6>
+                <p class="card-text"><%= comment.content %></p>
+                <small class="text-muted"><%= new Date(comment.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) %></small>
+                <% }); %>
             </div>
         </div>
     </div>

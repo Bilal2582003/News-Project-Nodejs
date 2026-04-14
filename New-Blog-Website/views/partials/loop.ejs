@@ -1,0 +1,92 @@
+<% news.data.forEach(function(d){ %>
+    <div class="post-content">
+        <div class="row">
+            <div class="col-md-4">
+                <a class="post-img" href="/single/<%= d._id %>"><img src="/uploads/<%= d.image %>" alt="" /></a>
+            </div>
+            <div class="col-md-8">
+                <div class="inner-content clearfix">
+                    <h3><a href='/single/<%= d._id %>'>
+                            <%= d.title %>
+                        </a></h3>
+                    <div class="post-information">
+                        <span>
+                            <i class="fa fa-tags" aria-hidden="true"></i>
+                            <a href='/category/<%= d.category.slug %>'>
+                                <%= d.category.name %>
+                            </a>
+                        </span>
+                        <span>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <a href='/author/<%= d.author._id %>'>
+                                <%= d.author.fullname %>
+                            </a>
+                        </span>
+                        <span>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+
+                            <% var date=new Date(d.createdAt); var newDate=date.toLocaleDateString('en-GB', {
+                                day: '2-digit' , month: 'long' , year: 'numeric' });%>
+
+                                <%= newDate %>
+                        </span>
+                    </div>
+                    <p class="description">
+                        <%- d.content.substring(0,30)+ '...' %>
+                    </p>
+                    <a class='read-more pull-right' href='/single/<%= d._id %>'>read more</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% }) %>
+
+
+        <!-- <nav>
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link">Previous</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item active">
+                        <a class="page-link" href="#" aria-current="page">2</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav> -->
+        <!-- <%= news.currentPage %> -->
+        <% function buildQueryString(query, page) { const params= new URLSearchParams(query); params.set('page', page);
+            return '?' + params.toString(); } %>
+            <nav>
+                <ul class="pagination">
+                    <% if (news.currentPage> 1) { %>
+                        <li class="page-item">
+                            <a class="page-link" href="<%= buildQueryString(query, news.currentPage - 1) %>">Previous</a>
+                        </li>
+                        <% } else { %>
+                            <li class="page-item disabled">
+                                <a class="page-link">Previous</a>
+                            </li>
+                            <% } %>
+                                <% for (let i=1; i <=news.totalPages; i++) { %>
+                                    <li class="page-item <%= i === news.currentPage ? 'active' : '' %>">
+                                        <a class="page-link" href="<%= buildQueryString(query, i) %>">
+                                            <%= i %>
+                                        </a>
+                                    </li>
+                                    <% } %>
+                                        <% if (news.currentPage < news.totalPages) { %>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    href="<%= buildQueryString(query, news.currentPage + 1) %>">Next</a>
+                                            </li>
+                                            <% } else { %>
+                                                <li class="page-item disabled">
+                                                    <a class="page-link">Next</a>
+                                                </li>
+                                                <% } %>
+                </ul>
+            </nav>

@@ -5,7 +5,8 @@
                 <h1 class="admin-heading"><i class="fa fa-comments"></i> Comments Management</h1>
             </div>
             <div class="col-md-12">
-                <table class="content-table" style="background: white;">
+                <div id="commentTable"></div>
+                <!-- <table class="content-table" style="background: white;">
                     <thead>
                         <th>Article</th>
                         <th>Name</th>
@@ -114,8 +115,8 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
-                <nav aria-label="...">
+                </table> -->
+                <!-- <nav aria-label="...">
                     <ul class="pagination">
                         <li class="page-item disabled">
                             <a class="page-link">Previous</a>
@@ -129,8 +130,102 @@
                             <a class="page-link" href="#">Next</a>
                         </li>
                     </ul>
-                </nav>
+                </nav> -->
             </div>
         </div>
     </div>
 </div>
+<script type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js"></script>
+
+<script>
+    const tableData = <%- JSON.stringify(comments) %>;
+    // console.log(tableData)
+    var table = new Tabulator("#commentTable", {
+        data: tableData,
+        layout: "fitColumns",
+        pagination: true,
+        paginationSize: 10,
+        paginationSizeSelector: [5, 10, 25, 50, 100],
+        columns: [
+            // { title: "ID", field: "id", width: 50 },
+            { title: "S.NO", formatter: "rownum", width: 100, hozAlign: "center" },
+            { title: "Article", field: "article.title", headerFilter: "input" },
+            { title: "Name", field: "name", headerFilter: "input" },
+            // { title: "Description", field: "description", headerFilter: "input" },
+            { title: "Comment", field: "content", headerFilter: "input" },
+            { title: "Status", field: "status", headerFilter: "input" },
+            { title: "Date", field: "createdAt", headerFilter: "input" },
+            {
+                title: "Action", formatter: function (cell, formatterParams, onRendered) {
+
+                    const id = cell.getRow().getData()._id
+                    return `<select name="status" class="form-select form-select-sm d-inline-block w-auto" onchange="updateStatus('${id}', this.value)">
+                                    <option value="pending" ${cell.getRow().getData().status == "pending" ? "selected" : ""}>Pending</option>
+                                    <option value="approved" ${cell.getRow().getData().status == "approved" ? "selected" : ""}>Approved</option>
+                                    <option value="rejected" ${cell.getRow().getData().status == "rejected" ? "selected" : ""}>Rejected</option>
+                                </select>
+                                <button onclick="deleteComment('${id}')" class="btn btn-danger btn-sm"><i class='fa fa-trash-o text-white'></i></button>
+                                `;
+                    // <a href='/admin/update-category/${id}' class="btn btn-primary btn-sm"><i class='fa fa-edit text-white'></i></a>
+                }
+            },
+        ],
+    });
+
+    async function updateStatus(id, status) {
+        try {
+
+            const response = await fetch(`/admin/update-comment-status/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status })
+            });
+            if (response.ok) {
+                alert("Comment status updated successfully");
+                location.reload();
+            }
+            if (response.status == 400) {
+                const data = await response.json();
+                alert(data.message);
+            }
+
+        } catch (error) {
+            console.error("Error updating comment status:", error);
+            alert("An error occurred while updating the comment status");
+        }
+    }
+
+
+    async function deleteComment(id) {
+        try {
+            if (confirm("Are you sure you want to delete this comment?")) {
+                const response = await fetch(`/admin/delete-comment/${id}`, {
+                    method: 'DELETE',
+                });
+                if (response.ok) {
+                    alert("Comment deleted successfully");
+                    location.reload();
+                }
+                if (response.status == 400) {
+                    const data = await response.json();
+                    alert(data.message);
+                }
+            }
+        } catch (error) {
+            console.error("Error deleting comment:", error);
+            alert("An error occurred while deleting the comment");
+        }
+    }
+
+
+
+</script>
+
+
+
+<%- contentFor("tabulatorCss") %>
+    <link href="https://unpkg.com/tabulator-tables@6.3.1/dist/css/tabulator.min.css" rel="stylesheet">

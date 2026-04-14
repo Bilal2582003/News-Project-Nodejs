@@ -8,11 +8,11 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>News</title>
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icon -->
-    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="/css/font-awesome.css">
     <!-- Custom stlylesheet -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -23,7 +23,13 @@
             <div class="row justify-content-center">
                 <!-- LOGO -->
                 <div class="col-md-3">
-                    <a href="index.html" id="logo"><img src="images/news.jpg" alt="Logo" /></a>
+                    <a href="/" id="logo">
+                        <% if(setting.website_logo){ %>
+                            <img width="80px" height="120px" src="/uploads/<%= setting.website_logo %>" alt="Logo" />
+                            <% }else{ %>
+                                settings.website_title
+                                <% } %>
+                    </a>
                 </div>
                 <!-- /LOGO -->
             </div>
@@ -36,11 +42,12 @@
             <div class="row">
                 <div class="col-md-12">
                     <ul class='menu'>
-                        <li><a href='index.html'>Home</a></li>
-                        <li><a href='category.html'>Business</a></li>
-                        <li><a href='category.html'>Entertainment</a></li>
-                        <li><a href='category.html'>Sports</a></li>
-                        <li><a href='category.html'>Politics</a></li>
+                        <li><a href='/'>Home</a></li>
+                        <% categories.forEach(function(cat){ %>
+                            <li><a href='/category/<%= cat.slug %>'>
+                                    <%= cat.name %>
+                                </a></li>
+                            <% }) %>
                     </ul>
                 </div>
             </div>
@@ -56,8 +63,8 @@
                         <!-- /post-container -->
                 </div>
                 <!-- sidebar -->
-              <%- include('partials/sidebar') %>
-                <!-- /sidebar -->
+                <%- include('partials/sidebar') %>
+                    <!-- /sidebar -->
             </div>
         </div>
     </div>
@@ -65,7 +72,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <span>© Copyright 2025 News | Powered by <a href="http://www.yahubaba.com/">Yahu Baba</a></span>
+                    <span>© Copyright 2025 News | Powered by <a
+                            href="http://cybernsoft.com/Able-Choice">Bilal</a></span>
                 </div>
             </div>
         </div>

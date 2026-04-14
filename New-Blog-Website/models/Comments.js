@@ -27,16 +27,9 @@ const commentSchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'approved', 'rejected'],
         default: 'pending'
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
     }
-});
-commentSchema.pre('save', function(next) {
-    // if (!this.isModified('name')) return next();
-    this.slug = slugify(this.name, { lower: true });
-    next();
+},{
+    timestamps: true
 });
 
 module.exports = mongoose.model('Comment', commentSchema);

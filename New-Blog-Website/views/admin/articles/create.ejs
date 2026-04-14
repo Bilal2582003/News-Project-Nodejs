@@ -9,7 +9,7 @@
                     <h5 class="card-header">Add New Article</h5>
                     <div class="card-body">
                         <!-- Form -->
-                        <form action="" method="POST" enctype="multipart/form-data">
+                        <form action="/admin/add-article" method="POST" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="article_title" class="form-label">Title</label>
                                 <input type="text" name="title" id="article_title" class="form-control"
@@ -23,7 +23,11 @@
                             <div class="mb-3">
                                 <label for="article_category" class="form-label">Category</label>
                                 <select name="category" id="article_category" class="form-control">
-                                    <option value="" selected> Select Category</option>
+                                    <option value="" selected disabled> Select Category</option>
+                                    <% categories.forEach((category)=>{ %>
+                                        <option value="<%= category._id %>" ><%= category.name %></option>
+                                    <% }) %>
+                                    
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -33,6 +37,8 @@
                             <input type="submit" name="submit" class="btn btn-primary" value="Save" required />
                         </form>
                         <!--/Form -->
+                        <!-- ---- Show error ---- -->
+                                <%- include('../partials/error') %>
                     </div>
                 </div>
             </div>
