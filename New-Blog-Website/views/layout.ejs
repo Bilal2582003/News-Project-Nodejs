@@ -13,6 +13,10 @@
     <link rel="stylesheet" href="/css/font-awesome.css">
     <!-- Custom stlylesheet -->
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .fade-in { animation: fadeIn 0.8s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
 
 <body>
@@ -22,10 +26,10 @@
         <div class="container">
             <div class="row justify-content-center">
                 <!-- LOGO -->
-                <div class="col-md-3">
+                <div class="col-md-3 text-center">
                     <a href="/" id="logo">
                         <% if(setting.website_logo){ %>
-                            <img width="80px" height="120px" src="/uploads/<%= setting.website_logo %>" alt="Logo" />
+                            <img style="max-width:100%; height:auto; "src="/uploads/<%= setting.website_logo %>" alt="Logo" />
                             <% }else{ %>
                                 settings.website_title
                                 <% } %>
@@ -41,10 +45,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <ul class='menu'>
-                        <li><a href='/'>Home</a></li>
+                    <ul class='menu list-inline text-center mb-0'>
+                        <li class="list-inline-item"><a class="p-3 d-block" href='/'>Home</a></li>
                         <% categories.forEach(function(cat){ %>
-                            <li><a href='/category/<%= cat.slug %>'>
+                            <li class="list-inline-item"><a class="p-3 d-block" href='/category/<%= cat.slug %>'>
                                     <%= cat.name %>
                                 </a></li>
                             <% }) %>
@@ -71,10 +75,10 @@
     <div id="footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+                <!-- <div class="col-md-12"> -->
                     <span>© Copyright 2025 News | Powered by <a
                             href="http://cybernsoft.com/Able-Choice">Bilal</a></span>
-                </div>
+                <!-- </div> -->
             </div>
         </div>
     </div>
