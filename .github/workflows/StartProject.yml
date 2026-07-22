@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'New-Blog-Website/**'
-    branches: [main]
+    branches: [newUi]
 
 jobs:
   build-nodejs-app:
